@@ -41,7 +41,12 @@ export default function App() {
     setMessage("");
     setSpinnerOn(true);
     axios.post(loginUrl, credentials)
-      .then(res => console.log(res))
+      .then(res => {
+        localStorage.setItem("token", res.data.token);
+        setMessage(res.data.message);
+        navigate("articles");
+        setSpinnerOn(false);
+      })
       .catch(err => console.error(err));
   }
 
@@ -85,7 +90,7 @@ export default function App() {
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
               <ArticleForm />
