@@ -24,6 +24,11 @@ export default function App() {
   const redirectToLogin = () => { /* ✨ implement */ }
   const redirectToArticles = () => { /* ✨ implement */ }
 
+  const setScreenForLoading = () => {
+    setMessage("");
+    setSpinnerOn(true);
+  }
+
   const logout = () => {
     // ✨ implement
     // If a token is in local storage it should be removed,
@@ -32,7 +37,7 @@ export default function App() {
     // using the helper above.
   }
 
-  const login = ( credentials ) => {
+  const login = (credentials) => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch a request to the proper endpoint.
@@ -40,8 +45,7 @@ export default function App() {
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
 
-    setMessage("");
-    setSpinnerOn(true);
+    setScreenForLoading();
     axios.post(loginUrl, credentials)
       .then(res => {
         localStorage.setItem("token", res.data.token);
@@ -62,18 +66,15 @@ export default function App() {
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
 
-    setMessage("");
-    setSpinnerOn(true);
+    setScreenForLoading();
     axiosWithAuth().get()
-      .then( res => {
+      .then(res => {
         setArticles(res.data.articles);
         setMessage(res.data.message);
         setSpinnerOn(false);
       })
-      .catch( err => {
-        console.error(err)
-        setSpinnerOn(false);
-      });
+      .catch(err => console.error(err))
+      .finally(() => setSpinnerOn(false));
   }
 
   const postArticle = article => {
@@ -82,17 +83,16 @@ export default function App() {
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
 
-    setMessage("");
-    setSpinnerOn(true);
+    setScreenForLoading();
     axiosWithAuth().post(null, article)
-      .then( res => {
+      .then(res => {
         setArticles([...articles, res.data.article]);
         setMessage(res.data.message);
       })
-      .catch( err => {
+      .catch(err => {
         console.error(err);
       })
-      .finally( () => {
+      .finally(() => {
 
         setSpinnerOn(false)
       });
@@ -102,28 +102,36 @@ export default function App() {
     // ✨ implement
     // You got this!
 
-    setMessage("");
-    setSpinnerOn(true);
+    setScreenForLoading();
     axiosWithAuth().put(`${article_id}`, article)
-      .then( res => {
-        setArticles( articles.map ( 
-          art => art.article_id == article_id ? res.data.article : art 
+      .then(res => {
+        setArticles(articles.map(
+          art => art.article_id === article_id ? res.data.article : art
         ))
         setMessage(res.data.message);
       })
-      .catch( err => console.error(err))
+      .catch(err => console.error(err))
       .finally(() => setSpinnerOn(false));
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
+
+    setScreenForLoading();
+    axiosWithAuth().delete(`${article_id}`)
+      .then(res => {
+        setArticles(articles.filter(art => art.article_id !== article_id));
+        setMessage(res.data.message);
+      })
+      .catch(err => console.error(err))
+      .finally(() => setSpinnerOn(false));
   }
 
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner on={spinnerOn}/>
-      <Message message={message}/>
+      <Spinner on={spinnerOn} />
+      <Message message={message} />
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -132,17 +140,23 @@ export default function App() {
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm login={login}/>} />
+          <Route path="/" element={<LoginForm login={login} />} />
           <Route path="articles" element={
             <>
-              <ArticleForm 
-                currentArticleId={currentArticleId}
+              <ArticleForm
+                articles={articles}
                 setCurrentArticleId={setCurrentArticleId}
-                articles = {articles}
-                updateArticle = {updateArticle}
-                postArticle = {postArticle}
+                currentArticleId={currentArticleId}
+                updateArticle={updateArticle}
+                postArticle={postArticle}
               />
-              <Articles articles={articles} getArticles={getArticles} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId}/>
+              <Articles
+                articles={articles}
+                setCurrentArticleId={setCurrentArticleId}
+                currentArticleId={currentArticleId}
+                getArticles={getArticles}
+                deleteArticle={deleteArticle}
+              />
             </>
           } />
         </Routes>
