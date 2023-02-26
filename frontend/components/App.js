@@ -88,17 +88,31 @@ export default function App() {
       .then( res => {
         setArticles([...articles, res.data.article]);
         setMessage(res.data.message);
-        setSpinnerOn(false);
       })
       .catch( err => {
-        console.error(err)
-        setSpinnerOn(false);
+        console.error(err);
+      })
+      .finally( () => {
+
+        setSpinnerOn(false)
       });
   }
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+
+    setMessage("");
+    setSpinnerOn(true);
+    axiosWithAuth().put(`${article_id}`, article)
+      .then( res => {
+        setArticles( articles.map ( 
+          art => art.article_id == article_id ? res.data.article : art 
+        ))
+        setMessage(res.data.message);
+      })
+      .catch( err => console.error(err))
+      .finally(() => setSpinnerOn(false));
   }
 
   const deleteArticle = article_id => {
