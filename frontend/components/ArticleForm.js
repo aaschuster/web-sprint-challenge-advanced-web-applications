@@ -36,6 +36,11 @@ export default function ArticleForm(props) {
   const isDisabled = () => {
     // ✨ implement
     // Make sure the inputs have some values
+    
+    const { title, text, topic } = values;
+
+    if(title.trim()!=="" && text.trim()!=="" && topic.trim()!=="") return false;
+    return true;
   }
 
   return (
