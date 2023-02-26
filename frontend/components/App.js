@@ -108,8 +108,8 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm currentArticleId={currentArticleId} articles = {articles}/>
-              <Articles articles={articles} getArticles={getArticles} setCurrentArticleId={setCurrentArticleId}/>
+              <ArticleForm currentArticleId={currentArticleId} setCurrentArticleId={setCurrentArticleId} articles = {articles}/>
+              <Articles articles={articles} getArticles={getArticles} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId}/>
             </>
           } />
         </Routes>

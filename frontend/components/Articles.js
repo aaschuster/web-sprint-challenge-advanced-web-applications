@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import PT from 'prop-types'
 
 export default function Articles(props) {
-  const { articles, getArticles, setCurrentArticleId } = props;
+  const { articles, getArticles, setCurrentArticleId, currentArticleId } = props;
   // ✨ where are my props? Destructure them here
 
   // ✨ implement conditional logic: if no token exists
@@ -30,8 +30,8 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={false} onClick={() => setCurrentArticleId(art.article_id)}>Edit</button>
-                  <button disabled={false} onClick={Function.prototype}>Delete</button>
+                  <button disabled={currentArticleId} onClick={() => setCurrentArticleId(art.article_id)}>Edit</button>
+                  <button disabled={currentArticleId} onClick={Function.prototype}>Delete</button>
                 </div>
               </div>
             )
