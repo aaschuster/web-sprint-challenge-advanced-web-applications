@@ -81,6 +81,19 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+
+    setMessage("");
+    setSpinnerOn(true);
+    axiosWithAuth().post(null, article)
+      .then( res => {
+        setArticles([...articles, res.data.article]);
+        setMessage(res.data.message);
+        setSpinnerOn(false);
+      })
+      .catch( err => {
+        console.error(err)
+        setSpinnerOn(false);
+      });
   }
 
   const updateArticle = ({ article_id, article }) => {
@@ -108,7 +121,13 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm currentArticleId={currentArticleId} setCurrentArticleId={setCurrentArticleId} articles = {articles}/>
+              <ArticleForm 
+                currentArticleId={currentArticleId}
+                setCurrentArticleId={setCurrentArticleId}
+                articles = {articles}
+                updateArticle = {updateArticle}
+                postArticle = {postArticle}
+              />
               <Articles articles={articles} getArticles={getArticles} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId}/>
             </>
           } />

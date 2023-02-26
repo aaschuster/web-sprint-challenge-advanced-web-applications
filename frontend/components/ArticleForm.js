@@ -7,7 +7,7 @@ export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
 
-  const { setCurrentArticleId, currentArticleId, articles } = props;
+  const { postArticle, updateArticle, setCurrentArticleId, currentArticleId, articles } = props;
 
   useEffect(() => {
     // ✨ implement
@@ -31,6 +31,9 @@ export default function ArticleForm(props) {
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
+
+    if(currentArticleId) updateArticle(values);
+    else postArticle(values);
   }
 
   const isDisabled = () => {
