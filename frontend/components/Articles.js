@@ -13,7 +13,7 @@ export default function Articles(props) {
     getArticles();
   }, [])
 
-  return (
+  if (localStorage.getItem("token")) return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
     // and use the articles prop to generate articles
     <div className="articles">
@@ -39,6 +39,7 @@ export default function Articles(props) {
       }
     </div>
   )
+  return (<Navigate to="/"/>)
 }
 
 // 🔥 No touchy: Articles expects the following props exactly:
