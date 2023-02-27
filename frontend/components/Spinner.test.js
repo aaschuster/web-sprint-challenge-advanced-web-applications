@@ -3,6 +3,7 @@
 
 import React from "react"
 import { render, screen } from "@testing-library/react"
+import '@testing-library/jest-dom/extend-expect'
 import Spinner from "./Spinner"
 
 test('sanity', () => {
@@ -20,5 +21,12 @@ test("renders with no errors with on as false", () => {
 test("expect Please wait... to not be in the document", () => {
   render(<Spinner on={false}/>);
   const pleaseWaitText = screen.queryByText(/Please wait.../i);
-  expect(pleaseWaitText).not.toBeInTheDocument;
+  expect(pleaseWaitText).not.toBeInTheDocument();
 })
+
+test("expect Please wait... to be in the document", () => {
+  render(<Spinner on={true}/>);
+  const pleaseWaitText = screen.queryByText(/Please wait.../i);
+  expect(pleaseWaitText).toBeInTheDocument();
+})
+
