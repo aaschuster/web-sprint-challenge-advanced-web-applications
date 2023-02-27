@@ -21,7 +21,7 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { /* ✨ implement */ }
+  const redirectToLogin = () => navigate("/");
   const redirectToArticles = () => { /* ✨ implement */ }
 
   const setScreenForLoading = () => {
@@ -35,6 +35,10 @@ export default function App() {
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
+
+    localStorage.removeItem("token");
+    setMessage("Goodbye!");
+    redirectToLogin();
   }
 
   const login = (credentials) => {
@@ -73,7 +77,7 @@ export default function App() {
         setMessage(res.data.message);
         setSpinnerOn(false);
       })
-      .catch(err => console.error(err))
+      .catch(err => redirectToLogin())
       .finally(() => setSpinnerOn(false));
   }
 
